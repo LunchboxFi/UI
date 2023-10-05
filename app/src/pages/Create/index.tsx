@@ -1,26 +1,18 @@
 import React, { useEffect} from 'react'
-import { encrypt } from '@lunchboxfi/sdk/cards/encrypt'
+import { encrypt } from '@lunchboxfi/sdk/lib'
 import { Keypair } from '@solana/web3.js'
 import bs58 from 'bs58'
 
 
 function index() {
-
-  useEffect(() => {
-    const PIN = 5676;
-    let privateKey: Uint8Array | any = Keypair.generate().secretKey;
-    privateKey = bs58.encode(privateKey);
-    console.log(privateKey);
-    const encryptedValue = encrypt(PIN, privateKey);
-    console.log(encryptedValue);
-
-    // You can perform any additional actions with encryptedValue here
-
-    // Make sure to clean up any resources if necessary
-    return () => {
-      // Cleanup code here (if needed)
-    };
-  }, []);
+  
+  // let privatekey : any = Keypair.generate().secretKey
+  // privatekey = bs58.encode(privatekey)
+  // console.log(privatekey)
+  //  const PIN = 5546
+  // const en = encrypt(PIN, privatekey)
+  // console.log(en)
+  
   
   return (
     <div className='w-[100%] h-[100%] px-[4rem]'>

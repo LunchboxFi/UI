@@ -1,6 +1,8 @@
 import React from 'react'
 
 function Review() {
+
+
   return (
     <div className='w-[100%] h-[100%] px-[4rem]'>
         <div className=' border-[#ffffff50] border-[3px] h-[88vh] p-6 rounded-2xl'>
