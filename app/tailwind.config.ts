@@ -12,6 +12,11 @@ const config: Config = {
         sans: ['var(--font-general)'],
         mono: ['var(--font-mono)'],
       },
+      fontWeight: {
+        '100': '100',
+        '400': '400',
+        '700': '700',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

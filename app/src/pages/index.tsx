@@ -29,7 +29,7 @@ export default function Home() {
       <div className='h-[100%] flex-col mt-[60%] justify-end w-[100%]'>
       <div className=' h-[100%] w-[100%]'>
         <h3 className='font-sans mt-[9rem] font-normal'>1. Leverage solana's  infrastructure</h3>
-        <h3 className='font-mono font-normal mt-3'>Transaction that cost a fraction of a cent and speed of less than a second</h3>
+        <h3 className='font-mono font-normal mt-3'>Transactions that cost a fraction of a cent and speed of less than a second</h3>
       </div>
       </div>
       </div>

@@ -2,6 +2,7 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app';
 import localFont from 'next/font/local';
 import { Gayathri } from 'next/font/google'
+import Layout from './layout';
 
 const generalsans = localFont({
   src: [
@@ -20,8 +21,21 @@ const gayathri = Gayathri({
   variable: '--font-mono',
 })
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps, router }: AppProps) {
+  const site = router.route === '/';
+
+
+  if (site) {
+    // Render the login page without the layout
+    return <main className={`${generalsans.variable} ${gayathri.variable}`}>
+    <Component {...pageProps} /> 
+    </main>
+  }
+
+
   return <main className={`${generalsans.variable} ${gayathri.variable}`}>
-  <Component {...pageProps} /> 
+    <Layout>
+    <Component {...pageProps} /> 
+    </Layout>
   </main>
 }
