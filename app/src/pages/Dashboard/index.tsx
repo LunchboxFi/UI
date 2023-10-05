@@ -44,12 +44,12 @@ function index() {
             <div className='bg-white h-[40px] w-[40px] rounded-full'></div>
             
             <div className='px-4'>
-                <h5 className='text-black'>SPL Token </h5>
-                <h5 className='text-black'>Token Amount</h5>
+                <h5 className='text-black font-mono'>SPL Token </h5>
+                <h5 className='text-black font-mono'>Token Amount</h5>
             </div>
 
             <div className='px-4 h-[100%] flex flex-grow items-center justify-end '>
-                <h5 className='text-black'>$0</h5>
+                <h5 className='text-black font-mono'>$0</h5>
             </div>
             </div>
             
