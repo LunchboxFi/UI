@@ -45,6 +45,8 @@ function index() {
       });
   }, []);
 
+  const multisigPda = data?.multisig
+
   let primary = data?.keypairs?.[0].publicKey
   
   useEffect(() => {
@@ -103,14 +105,16 @@ function index() {
 
     const saveToLocalStorage = () => {
       const privateKey: string | any = secondaryPrivateKey;
+      const pda: string | any = multisigPda
       localStorage.setItem('privateKeys', privateKey);
+      localStorage.setItem('multisig', pda);
     };
 
     saveToLocalStorage()
 
     setLoader(false);
 
-    router.push('Create/review')
+    router.push('Dashboard')
     }
 
 
@@ -164,7 +168,7 @@ function index() {
              </div>
              <div className='w-[100%] mt-4 flex justify-end'>
              <button onClick={handleSave} className='font-mono rounded-md bg-white h-10 text-black px-3'>
-             {loader ? <Loader /> : 'Next Step'}
+             {loader ? <Loader /> : 'Create Lunchbox'}
              </button>
              </div>
             </div>

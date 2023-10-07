@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-general)'],
         mono: ['var(--font-mono)'],
+        main: ['var(--font-main)'],
       },
       fontWeight: {
         '100': '100',

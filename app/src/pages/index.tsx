@@ -1,11 +1,18 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { BsArrowRightShort, BsDiscord, BsTwitter } from 'react-icons/bs'
+import { useRouter } from 'next/router'
 
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+  const router = useRouter()
+
+   function handleClick(){
+    router.push('Create')
+  }
   return (
     <main
       className={`flex bg-background bg-contain min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
@@ -35,7 +42,7 @@ export default function Home() {
       </div>
       
       <div>
-        <button className='bg-white p-3 rounded-full'>
+        <button onClick={handleClick} className='bg-white p-3 rounded-full'>
           <BsArrowRightShort color='black' size={50} />
         </button>
       </div>
