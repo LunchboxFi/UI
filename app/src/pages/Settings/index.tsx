@@ -23,6 +23,30 @@ function index() {
           <button className='font-mono rounded-md border-[3px] border-[#292929] bg-white h-[100%] w-[45%] text-black px-3'>Change limit</button>
           </div>
 
+         
+          <h1 className='text-black mt-8 font-mono'>Analytics</h1>
+          <div className='bg-[#292929] h-10 flex items-center justify-end overflow-hidden rounded-md'>
+          <div className='overflow-hidden flex w-[100%] pl-4 justify-start'>
+          <span className='font-mono '>Transaction History</span>
+          </div>
+          <button className='font-mono rounded-md border-[3px] border-[#292929] bg-white h-[100%] w-[45%] text-black px-3'>Download PDF</button>
+          </div>
+
+          <h1 className='text-black mt-8 font-mono'>Private Mode</h1>
+          <div className='bg-[#292929] h-10 flex items-center justify-end overflow-hidden rounded-md'>
+          <div className='overflow-hidden flex w-[100%] pl-4 justify-start'>
+          <span className='font-mono '>All your transactions will be private</span>
+          </div>
+          <button className='font-mono rounded-md border-[3px] border-[#292929] bg-white h-[100%] w-[45%] text-black px-3'>Enable</button>
+          </div>
+
+          <h1 className='text-black mt-8 font-mono'>View Secondary Private key</h1>
+          <div className='bg-[#292929] h-10 flex items-center justify-end overflow-hidden rounded-md'>
+          <div className='overflow-hidden flex w-[100%] pl-4 justify-start'>
+          <span className='font-mono '>************************</span>
+          </div>
+          <button className='font-mono rounded-md border-[3px] border-[#292929] bg-white h-[100%] w-[45%] text-black px-3'>Unlock</button>
+          </div>
          </div>
          </div>
     </div>

@@ -8,6 +8,8 @@ import { PublicKey, LAMPORTS_PER_SOL, Connection, clusterApiUrl } from '@solana/
 import { PriceStatus, PythConnection, PythHttpClient, getPythProgramKeyForCluster } from '@pythnetwork/client'
 import axios, { AxiosResponse } from 'axios'
 import { useRouter } from 'next/router'
+import Tokens from '@/components/Tokens'
+import Card from '@/components/Card'
 
 interface BalanceRes {
    data: { data: {
@@ -116,7 +118,6 @@ function index() {
           .then((response) => {
             // Handle the response data here
             if(response){
-            console.log(response.data.data)
             setTransaction(response.data.data)
             }
           })
@@ -181,7 +182,7 @@ function index() {
                 <h5 className='text-black font-mono'>${solbalance && solprice? (solbalance * solprice).toFixed(2) : "0"}</h5>
             </div>
             </div>
-            
+            <Tokens />
         </div>
 
 
@@ -191,25 +192,20 @@ function index() {
 
 
          <div className=' w-[100%] flex justify-end col-span-2 pl-6'>
-         <div className='bg-white rounded-xl p-5 h-[100%] w-[100%]'>
+         <div className='bg-white overflow-hidden rounded-xl p-5 h-[100%] w-[100%]'>
           <h1 className='text-black font-mono'>Cards</h1>
-          <div onClick={handleCardRoute} className='bg-green-400 cursor-pointer px-6 flex flex-col justify-center border-[1px] h-[45%] mt-4 rounded-2xl border-[#00000040]'>
-          <h2 className='text-4xl font-main pt-20 font-semibold text-[#00000070]'>1652 5663 2289 0045</h2>
-          <div className='flex-grow flex items-end'>
-          <h4 className='font-mono pb-4'>Ife Asiadiachi</h4>
-          </div>
-          </div>
+          <Card />
 
           <h1 className='text-black mt-8 font-mono'>Recent Transactions</h1>
-          <div className='flex flex-col gap-3 py-5 overflow-y-scroll'>
-          {transaction && transaction.map((item: any) => (
-            <div className='text-white px-4 max-h-20 py-3 rounded-2xl bg-[#111111] font-main flex font-medium'>
+          <div className='flex flex-col gap-3 py-5 overflow-y-scroll overflow-hidden'>
+          {transaction && transaction.map((item: any, key: number) => (
+            <div key={key} className='text-white px-4 max-h-20 py-3 rounded-2xl bg-[#111111] font-main flex font-medium'>
               <div>
               <span>{item.type}</span>
               <h1 className='text-sm'>From: {item.nativeTransfers[0].fromUserAccount.slice(0,18)}...{item.nativeTransfers[0].fromUserAccount.slice(26)}</h1>
               </div>
               <div className='flex flex-grow justify-end'>
-              <span>{item.nativeTransfers[0].amount / LAMPORTS_PER_SOL}</span>
+              <span>{(item.nativeTransfers[0].amount / LAMPORTS_PER_SOL).toFixed(4)}</span>
               </div>
             </div>
            ))}
