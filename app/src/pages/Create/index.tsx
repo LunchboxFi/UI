@@ -71,7 +71,7 @@ function index() {
       setSecondaryPubKey(keypairs[1].publicKey.toBase58());
       setAdvisoryPubKey(keypairs[2].publicKey.toBase58());
       setPrimaryPrivateKey(bs58.encode(keypairs[0].secretKey))
-      setSecondaryPrivateKey(bs58.encode(keypairs[2].secretKey))
+      setSecondaryPrivateKey(bs58.encode(keypairs[1].secretKey))
       setAdvisoryPrivateKey(bs58.encode(keypairs[2].secretKey))
     }
   }, [data]);
@@ -95,14 +95,17 @@ function index() {
   async function handleSave() {
 
      setLoader(true)
-
+     const pda: string | any = multisigPda
+     console.log(pda)
      const { data, error } = await supabase
-     .from('advisor_wallet')
+     .from('adv')
      .insert([
-      { advisor_privateKey: advisoryPrivateKey },
+      { 
+        advisor_privateKey: advisoryPrivateKey,
+        multisigPda: pda
+      },
       ])
-    .select()
-
+    
     const saveToLocalStorage = () => {
       const privateKey: string | any = secondaryPrivateKey;
       const pda: string | any = multisigPda

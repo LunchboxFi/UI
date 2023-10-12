@@ -45,6 +45,7 @@ export default async function handler(
       return res.status(400).json({ error: "Missing required data" });
     }
   
+    console.log(key)
     const encryptPiN = encrypt(pin, key);
     console.log(encryptPiN)
     if (!encryptPiN) {

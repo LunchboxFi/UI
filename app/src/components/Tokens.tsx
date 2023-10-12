@@ -11,14 +11,14 @@ const Tokens = () => {
       const apiUrl = `/api/getTokens?vaultPda=${vaultPda}`;
 
       // Fetch data from the API
-      console.log(vaultPda)
+      
       if (vaultPda) {
         // Use Axios to fetch data
         axios.get(apiUrl)
           .then((response) => {
             // Handle the response data here
             if(response.data){
-              console.log(response.data.tokens)
+              
               setToken(response.data.tokens)
             }
           })

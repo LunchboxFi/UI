@@ -40,6 +40,7 @@ function index() {
     const [solbalance, setSolBalance] = useState<any>();
     const [solprice, setSolPrice] = useState<number | null>();
     const [transaction, setTransaction] = useState<[] | null>();
+    const [nonce, setNonce] = useState<any>();
 
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed")
     const router = useRouter()
@@ -64,7 +65,7 @@ function index() {
           index: 1,
         });
         setVaultPda(vaultPdaResult.toBase58());
-        console.log(vaultPdaResult.toBase58());
+        console.log("Vault" + vaultPdaResult.toBase58())
       }
        
          
@@ -83,7 +84,7 @@ function index() {
               if(response){
                 const solbalance = response.data.data.nativeBalance / LAMPORTS_PER_SOL
                 setSolBalance(solbalance)
-                console.log(solbalance)
+            
               }
             })
             .catch((error) => {
@@ -101,7 +102,6 @@ function index() {
             .then((response: AxiosResponse<PriceRes>) => {
               // Handle the response data here
               if(response){
-              console.log(response.data.data.data.SOL.price)
               setSolPrice(response.data.data.data.SOL.price)
               }
             })
@@ -112,7 +112,7 @@ function index() {
 
     useEffect(() => {
       const apiUrl = `/api/getTransaction`;
-
+      
       // Fetch data from the API
         axios.get(apiUrl)
           .then((response) => {

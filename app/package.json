@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@lunchboxfi/sdk": "^0.1.14",
+    "@lunchboxfi/sdk": "^0.1.15",
     "@pythnetwork/client": "^2.19.0",
     "@solana/web3.js": "^1.78.7",
     "@sqds/multisig": "^1.10.0",
