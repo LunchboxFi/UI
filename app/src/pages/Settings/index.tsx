@@ -1,6 +1,11 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 function index() {
+
+  const router = useRouter()
+
   return (
     <div className='w-[100%] h-[100%] flex justify-center'>
 
@@ -20,7 +25,9 @@ function index() {
           <div className='overflow-hidden flex w-[100%] pl-4 justify-start'>
           <span className='font-mono '>No limit</span>
           </div>
-          <button className='font-mono rounded-md border-[3px] border-[#292929] bg-white h-[100%] w-[45%] text-black px-3'>Change limit</button>
+          <Link href={'/SpendingLimit'} className='font-mono rounded-md border-[3px] border-[#292929] bg-white h-[100%] w-[45%] text-black px-3' >
+          <button className='font-mono rounded-md bg-white h-[100%] w-[100%] text-black px-3'>Change limit</button>
+          </Link>
           </div>
 
          

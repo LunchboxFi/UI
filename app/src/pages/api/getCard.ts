@@ -15,6 +15,7 @@ type Mutisig = {
   keypairs: Keypair[];
   signature: any;
 }
+
 const supabase = createClientComponentClient()
 
 export default async function handler(
@@ -27,7 +28,7 @@ export default async function handler(
         let { data: cards, error } = await supabase
         .from('cards')
         .select('*')
-        .eq("mutisigPda", mutisigPda)
+        .eq("multisigPda", mutisigPda)
          console.log(cards)
          res.status(200).json({ name: cards })
     })()
