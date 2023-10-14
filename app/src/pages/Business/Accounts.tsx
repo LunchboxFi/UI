@@ -86,8 +86,8 @@ function Accounts({}: Props) {
   },[])
 
   return (
-    <div className='flex flex-col w-full h-15 items-center pb-6 justify-center px-[20%]'>
-      <h1 className='text-2xl font-main font-medium'>Accounts</h1>
+    <div className='flex flex-col w-full h-15 items-center pb-6 justify-center px-[15%]'>
+      <h1 className='text-xl font-main font-medium'>Accounts</h1>
       <div className='w-full mt-5'>
         {results.map((result, index) => (
           <div key={index} className='mt-5 text-black p-5 h-[15%] bg-white rounded-xl w-full'>

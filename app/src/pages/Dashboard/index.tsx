@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {MouseEventHandler, useEffect, useState} from 'react'
 import { BsSend } from 'react-icons/bs'
 import { PiArrowBendLeftDownBold } from 'react-icons/pi'
 import { IoMdAddCircle } from 'react-icons/io'
@@ -54,9 +54,10 @@ function index() {
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed")
     const router = useRouter()
 
-    const handleCardRoute = () => {
-      router.push("Dashboard/Card")
-    }
+    const handle = (Route: string): MouseEventHandler<HTMLButtonElement> => (event: { preventDefault: () => void; }) => {
+      event.preventDefault();
+      router.push(Route);
+    };
   
     useEffect(() => {
       const pda = localStorage.getItem('multisig');
@@ -74,7 +75,7 @@ function index() {
           index: 1,
         });
         setVaultPda(vaultPdaResult.toBase58());
-        // console.log("Vault" + vaultPdaResult.toBase58())
+        console.log("Vault" + vaultPdaResult.toBase58())
       }
        
          
@@ -145,7 +146,7 @@ function index() {
       {showToast && (
         <Toast
           message="This is a sample toast message."
-          type='success'
+          type='warning'
           onClose={() => setShowToast(false)}
         />
       )}
@@ -168,11 +169,11 @@ function index() {
          
          <div className='w-[100%] flex gap-8 justify-center'>
 
-            <button className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
+            <button onClick={handle("Transact/Send")} className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
             <BsSend color="white" size={20} />
             </button>
 
-            <button className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
+            <button onClick={handle("Transact/Receive")} className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
             <PiArrowBendLeftDownBold color="white" size={20} />
             </button>
 
@@ -216,7 +217,12 @@ function index() {
 
           <h1 className='text-black mt-8 font-mono'>Recent Transactions</h1>
           <div className='flex flex-col gap-3 py-5 overflow-y-scroll overflow-hidden'>
-          
+          <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={showToastMessage}
+      >
+        Show Toast
+      </button>
           {transaction && Array.isArray(transaction) && transaction.map((item: any, key: number) => (
   <div key={key} className='text-white px-4 max-h-20 py-3 rounded-2xl bg-[#111111] font-main flex font-medium'>
     <div>
