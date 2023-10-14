@@ -37,7 +37,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Mutisig>
 ) {
-
+  
+  const { spendingLimitPda } = req.body
 
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed")
 
@@ -64,12 +65,12 @@ export default async function handler(
       const spendingLimitCreateKey = Keypair.generate().publicKey;
   
 
-    const spendingLimitPda = new PublicKey("BX3zeEe4kBiEHbUeNZjXbiLokEfSfamryWWbubzeMZWq")
+    const spendingLimitPubkey = new PublicKey(spendingLimitPda)
      console.log(multisigPubkey)
      let signature = await multisig.rpc.multisigRemoveSpendingLimit({
         connection,
         multisigPda: multisigPubkey,
-        spendingLimit: spendingLimitPda,
+        spendingLimit: spendingLimitPubkey,
         configAuthority: feePayer.publicKey,
         feePayer: feePayer,
         rentCollector: feePayer.publicKey,

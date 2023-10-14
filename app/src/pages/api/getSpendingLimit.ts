@@ -38,8 +38,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+    const { spendingLimitPda } = req.body
+
+
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed")
-    const solSpendingLimitPda = new PublicKey("BX3zeEe4kBiEHbUeNZjXbiLokEfSfamryWWbubzeMZWq")
+    const solSpendingLimitPda = new PublicKey(spendingLimitPda)
     const solSpendingLimitAccount = await SpendingLimit.fromAccountAddress(
         connection,
         solSpendingLimitPda

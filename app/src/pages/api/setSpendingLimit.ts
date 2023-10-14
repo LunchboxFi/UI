@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { encrypt, fetchMultisigAccount, createMultisig, addSpendingLimit } from '@lunchboxfi/sdk/lib'
 import { Keypair, TransactionMessage, Connection, clusterApiUrl, PublicKey, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { BN } from '@coral-xyz/anchor'
 import * as multisig from '@sqds/multisig'
 import bs58 from 'bs58'
 import { type } from 'os'
@@ -10,13 +11,19 @@ import { Member } from '@sqds/multisig/lib/generated'
 const { Period } = multisig.types;
 
 type Data = {
-  name: string
+    signature: string
+    pda: string
 }
 
-interface Mutisig  {
-  multisig: string | undefined;
-  keypairs: Keypair[] | undefined;
-  signature: any;
+type Error = {
+  data: string
+}
+
+enum PeriodEnum {
+  OneTime,
+  Day,
+  Week,
+  Month,
 }
 
 type Members = {
@@ -35,26 +42,26 @@ const supabase = createClientComponentClient()
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Mutisig>
+  res: NextApiResponse<Data| Error>
 ) {
 
-  const { multisigPda, keys, splMint, mintDecimals } = req.body
+  const { multisigPda, keys, splMint, amount, mintDecimals, time } = req.body
 
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed")
 
+  // console.log({
+  //   multisigPda, keys, splMint, amount, mintDecimals, time
+  // })
   const multisigPubkey = new PublicKey(multisigPda)
 
   const multisigAccount = await multisig.accounts.accountProviders.Multisig.fromAccountAddress(
     connection,
     multisigPubkey
   );
-
-  console.log(multisigAccount)
   const token = new PublicKey(splMint)
 
-  const transactionIndex = multisig.utils.toBigInt(
-    multisigAccount.transactionIndex
-  ) + 1n;
+  
+ 
 
   
     let { data: advkeys, error } = await supabase
@@ -62,17 +69,19 @@ export default async function handler(
     .select('advisor_privateKey')
     .eq("multisigPda", multisigPda)
 
-     if(advkeys){
+     if(advkeys && time){
       const secondaryarray = bs58.decode(keys);
       const advisor_array = bs58.decode(advkeys[0]?.advisor_privateKey);
 
       const secondaryKey = loadWalletKeypair(secondaryarray);
       const advisor_key = loadWalletKeypair(advisor_array);
 
-      const feePayer = loadWalletKeypair(bs58.decode("3JccbErBtmnKJpSonGP1Qhfu61RuzWhBjSi8Xb4XjwG5p4FwPLw7eDh1y5RXLtP9CbDJ9MeQH8a1EMVFhmcCYdUy"))
-      let members: Members
 
-      console.log("fee" + feePayer.publicKey)
+
+      const feePayer = loadWalletKeypair(bs58.decode(keys))
+      
+
+      console.log(feePayer)
 
       const spendingLimitCreateKey = Keypair.generate().publicKey;
   
@@ -80,8 +89,25 @@ export default async function handler(
       multisigPda: multisigPubkey,
       createKey: spendingLimitCreateKey,
     })[0];
-    console.log("SpendingLimit: " + spendingLimitPda)
-  
+
+    const spendingLimit = spendingLimitPda.toBase58()
+
+    let bn = new BN(amount)
+    console.log(time)
+
+    let selectedPeriod = Period.OneTime;
+    
+    if (time === 'Week') {
+       selectedPeriod = Period.Week;
+    } else if(time === 'Day') {
+       selectedPeriod = Period.Day;
+    } else if(time === 'Month') {
+      selectedPeriod = Period.Month;
+    } else if(time === 'OneTime') {
+      selectedPeriod = Period.OneTime;
+    }
+    console.log(selectedPeriod)
+    
      let signature = await multisig.rpc.multisigAddSpendingLimit({
         connection,
         feePayer,
@@ -93,10 +119,10 @@ export default async function handler(
         // Rent payer for state
         rentPayer: feePayer,
         // Spending limit amount
-        amount: 1n,
+        amount: amount,
         configAuthority: multisigAccount.configAuthority,
         // Spending limit will apply daily, see reference for more info
-        period: Period.Day,
+        period: selectedPeriod,
         // The mint of the token to apply the spending limit on
         mint: token,
         destinations: [],
@@ -106,6 +132,11 @@ export default async function handler(
       });
       console.log('Spending limit added successfully.' + signature)
 
+      if (signature) {
+        res.status(200).json({  signature, pda: spendingLimit  });
+      } else {
+        res.status(500).json({ data: "Failed to add spending limit" });
+      }
      }
   
 }
