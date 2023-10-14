@@ -10,7 +10,7 @@ import { Member } from '@sqds/multisig/lib/generated'
 const { Period } = multisig.types;
 
 type Data = {
-  name: string
+  signature: string
 }
 
 interface Mutisig  {
@@ -18,7 +18,9 @@ interface Mutisig  {
   keypairs: Keypair[] | undefined;
   signature: any;
 }
-
+type Error = {
+  data: string
+}
 type Members = {
   secondary: Keypair;
   advisor: Keypair;
@@ -35,14 +37,15 @@ const supabase = createClientComponentClient()
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Mutisig>
+  res: NextApiResponse<Data | Error>
 ) {
   
-  const { spendingLimitPda } = req.body
+  const { spendingLimitPda, keys, multisigPda } = req.body
 
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed")
 
-  const multisigPubkey = new PublicKey("2TKe6JynkcgB5VZEtmdFLW4LGsSHgNWygpfurBuHF7L1")
+  const multisigPubkey = new PublicKey(multisigPda)
+
 
   
     // let { data: advkeys, error } = await supabase
@@ -57,7 +60,7 @@ export default async function handler(
       // const secondaryKey = loadWalletKeypair(secondaryarray);
       // const advisor_key = loadWalletKeypair(advisor_array);
 
-      const feePayer = loadWalletKeypair(bs58.decode("3JccbErBtmnKJpSonGP1Qhfu61RuzWhBjSi8Xb4XjwG5p4FwPLw7eDh1y5RXLtP9CbDJ9MeQH8a1EMVFhmcCYdUy"))
+      const feePayer = loadWalletKeypair(bs58.decode(keys))
       let members: Members
 
       console.log("fee" + feePayer.publicKey)
@@ -76,7 +79,11 @@ export default async function handler(
         rentCollector: feePayer.publicKey,
      });
       console.log('Spending limit removed successfully.' + signature)
-
+      if (signature) {
+        res.status(200).json({  signature  });
+      } else {
+        res.status(500).json({ data: "Failed to add spending limit" });
+      }
      }
   
 }

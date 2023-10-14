@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { PublicKey } from '@solana/web3.js'
 import Toast from '@/components/Toast';
 import { useFormik } from 'formik';
+import PopupInput from '@/components/PopUp';
 import * as yup from 'yup';
 
 type SpendingLimit = {
@@ -33,6 +34,8 @@ function SpendingLimit() {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<ToastType>(ToastType.SUCCESS);
   const [signature, setSignature] = useState<string>("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     let pda = localStorage.getItem('spendinglimit')
@@ -68,9 +71,16 @@ function SpendingLimit() {
 
 
   const removeSpendingLimits = () => {
+    let pda = localStorage.getItem('spendinglimit')
+    let multisigPda = localStorage.getItem('multisig')
+
     let payload = {
-      spendingLimitPda: ""
-     };
+     spendingLimitPda: pda,
+     keys: primaryKey,
+     multisigPda: multisigPda
+    };
+
+    console.log(payload);
 
     (async ()=> {
       try {
@@ -84,12 +94,17 @@ function SpendingLimit() {
   
         if (!response.ok) {
           console.log(response)
-          
+          setToastMessage("Failed to remove spending limit")
+          setToastType(ToastType.ERROR)
+          showToastMessage()
         }
   
         const data = await response.json();
         if(data){
-          setSpendingLimit(data.data);
+          setToastMessage("Spending Limit Removed: "+ data.signature)
+          setSignature(data.signature)
+          setToastType(ToastType.SUCCESS)
+          showToastMessage()
           
         }
         
@@ -197,6 +212,24 @@ function SpendingLimit() {
     return mint
   }
 
+  const formatPeriod = (period: number) => {
+    if(period == 0){
+      return "One Time"
+    } else if(period == 1) {
+      return "One Day"
+    } else if(period == 2){
+      return "One Week"
+    } else if( period == 3) {
+      return "One Month"
+    }
+  }
+
+  const handlePopupSubmit = (value: string) => {
+    // Handle the submitted value here
+    setPrimaryKey(value)
+    removeSpendingLimits()
+    setShowPopup(false);
+  };
 
   return (
     <div className='w-[100%] h-[100%] pb-8 flex flex-col items-center justify-center'>
@@ -212,6 +245,13 @@ function SpendingLimit() {
           onClose={() => setShowToast(false)}
         />
         </a>
+      )}
+
+      {showPopup && (
+        <PopupInput
+          placeholder="Enter primary private key"
+          onSubmit={handlePopupSubmit}
+        />
       )}
          <div className=' w-[50%] flex justify-end'>
          <div className='bg-white rounded-xl p-5 h-[100%] w-[100%]'>
@@ -294,9 +334,9 @@ function SpendingLimit() {
           <div className='bg-white rounded-xl p-4 text-black'>
            <h3 className='font-mono'>Token: {formatMintPubkey(spendingLimit?.mint)}</h3>
            <h3 className='font-mono'>Amount: {spendingLimit?.amount}</h3>
-           <h3 className='font-mono'>Period: {spendingLimit?.period}</h3>
+           <h3 className='font-mono'>Period: {formatPeriod(spendingLimit?.period)}</h3>
            <h3 className='font-mono'>Spendable Balance: {spendingLimit?.remainingAmount}</h3>
-           <div className='flex flex-row justify-end mt-2 w-[100%]'><button onClick={removeSpendingLimits} className='bg-purple-500 text-white font-mono px-3 py-2 rounded-xl'>Remove Limit</button></div>
+           <div className='flex flex-row justify-end mt-2 w-[100%]'><button onClick={() => setShowPopup(true)} className='bg-purple-500 text-white font-mono px-3 py-2 rounded-xl'>Remove Limit</button></div>
      
           </div>
           </div>
