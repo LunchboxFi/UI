@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import axios, { AxiosResponse } from 'axios';
 
@@ -11,6 +12,8 @@ function CreateCard() {
   const [card, setCard] = useState<number | null>()
   const [nonce, setNonce] = useState<string| any>()
   const [hascard, setHasCard] = useState<boolean>(false)
+
+  const router = useRouter()
 
   const PINValidationSchema = Yup.object().shape({
     pin: Yup.string()
@@ -75,7 +78,7 @@ const handleSubmit = async (values: any, { setSubmitting }: any) => {
       }
       
       setSubmitting(false);
-    
+      router.reload()
   };
 
   function pretify(input: any) {
@@ -106,7 +109,7 @@ const handleSubmit = async (values: any, { setSubmitting }: any) => {
                  <div className='bg-green-400 mx-auto w-[80%] flex flex-col justify-center px-8 border-[1px] h-[15rem] mt-4 rounded-2xl border-[#00000040]'>
                  <h2 className='text-4xl font-main font-semibold pt-20 text-green-900'>{pretify(card)}</h2>
                  <div className='flex-grow flex items-end'>
-                 <p className='font-mono text-[#000000]'>You already have a card!</p>
+                 <p className='font-mono text-[#000000]'>You have a card!</p>
                  </div>
                  </div>
                  : 

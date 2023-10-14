@@ -21,14 +21,14 @@ export default async function handler(
     try {
 
          // Get the query parameter from the request
-        //  const { vaultPda } = req.query;
+         const { vaultPda } = req.query;
 
-        // if (!vaultPda) {
-        // // Handle the case where vaultPda is missing or undefined
-        // return res.status(400).json({ error: 'vaultPda parameter is missing' });
-        // }
+        if (!vaultPda) {
+        // Handle the case where vaultPda is missing or undefined
+        return res.status(400).json({ error: 'vaultPda parameter is missing' });
+        }
 
-        const url = `https://api-devnet.helius.xyz/v0/addresses/GHwTtdFcjzZK2wThQ7pLBvmMxmy7qvNSdygfk7JE46U9/transactions?api-key=d7e73515-c3a0-4f6c-a8a9-88306b028fbf`;
+        const url = `https://api-devnet.helius.xyz/v0/addresses/${vaultPda}/transactions?api-key=d7e73515-c3a0-4f6c-a8a9-88306b028fbf`;
 
         const response = await fetch(
           url,

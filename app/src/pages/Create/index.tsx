@@ -14,7 +14,7 @@ interface Multisig  {
 
 const supabase = createClientComponentClient()
 
-function index() {
+function Index() {
   const [data, setData] = useState<Multisig>();
   const [loader, setLoader] = useState<boolean>(false)
   const [primaryPubKey, setPrimaryPubKey] = useState<any>();
@@ -129,9 +129,9 @@ function index() {
             <div className='h-[100%] flex items-center p-5'>
             <div className='h-[80%] w-[50%] pr-5'>
              <h1 className='font-mono text-4xl'>Create your Lunchbox</h1>
-             <p className='font-mono mt-4 font-normal text-[#d4d4d4]'>A lunchbox contains 3 wallets as members, 2 members votes are required to execute any transaction. But 
+             <p className='font-mono mt-4 font-normal text-[#d4d4d4]'>{`A lunchbox contains 3 wallets as members, 2 members votes are required to execute any transaction. But 
               the primary wallet has the permission to remove any member that includes the protocol advisor and the secondary wallet if you feel it has been compromised. You can also
-              implement account lock by stoping us from signing transactions. We also won't sign certain suspicious transactions without a minimum timelock but don't worry you can override it using your private key.
+              implement account lock by stoping us from signing transactions. We also won't sign certain suspicious transactions without a minimum timelock but don't worry you can override it using your private key.`}
              </p>
             </div>
             <div className='h-[80%] overflow-y-auto p-5 font-bold w-[50%] rounded-2xl bg-[#292929]'>
@@ -183,4 +183,4 @@ function index() {
   )
 }
 
-export default index
+export default Index

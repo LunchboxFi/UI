@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {MouseEventHandler, useEffect, useState} from 'react'
 import { BsSend } from 'react-icons/bs'
 import { PiArrowBendLeftDownBold } from 'react-icons/pi'
 import { IoMdAddCircle } from 'react-icons/io'
@@ -10,6 +10,7 @@ import axios, { AxiosResponse } from 'axios'
 import { useRouter } from 'next/router'
 import Tokens from '@/components/Tokens'
 import Card from '@/components/Card'
+import Toast from '@/components/Toast'
 
 interface BalanceRes {
    data: { data: {
@@ -33,21 +34,30 @@ interface PriceRes {
   timeTaken: number;
 }
 
-function index() {
+function Index() {
     const [multisigPda, setMultsigPda] = useState<PublicKey | undefined>();
     const [vaultPda, setVaultPda] = useState<string | null>();
     const [balance, setBalance] = useState<any>();
     const [solbalance, setSolBalance] = useState<any>();
     const [solprice, setSolPrice] = useState<number | null>();
-    const [transaction, setTransaction] = useState<[] | null>();
+    const [transaction, setTransaction] = useState<[] | null>([]);
     const [nonce, setNonce] = useState<any>();
+    const [showToast, setShowToast] = useState(false);
+
+    const showToastMessage = () => {
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000); // Automatically hide the toast after 3 seconds
+    };
 
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed")
     const router = useRouter()
 
-    const handleCardRoute = () => {
-      router.push("Dashboard/Card")
-    }
+    const handle = (Route: string): MouseEventHandler<HTMLButtonElement> => (event: { preventDefault: () => void; }) => {
+      event.preventDefault();
+      router.push(Route);
+    };
   
     useEffect(() => {
       const pda = localStorage.getItem('multisig');
@@ -111,26 +121,36 @@ function index() {
     },[])
 
     useEffect(() => {
-      const apiUrl = `/api/getTransaction`;
+      const apiUrl = `/api/getTransaction?vaultPda=${vaultPda}`;
       
       // Fetch data from the API
-        axios.get(apiUrl)
-          .then((response) => {
-            // Handle the response data here
-            if(response){
-            setTransaction(response.data.data)
-            }
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
-          });
-  },[])
+      axios.get(apiUrl)
+        .then((response) => {
+          // Handle the response data here
+          if (response) {
+            setTransaction(response.data.data);
+            console.log("Transaction", response.data.data); // Separate the string and the object
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }, [vaultPda]);
+    
     
   
     
   
   return (
     <div className='w-[100%] h-[100%] grid grid-flow-row grid-cols-5 p-6'>
+      
+      {showToast && (
+        <Toast
+          message="This is a sample toast message."
+          type='warning'
+          onClose={() => setShowToast(false)}
+        />
+      )}
          <div className='bg-white h-[80vh] w-[100%] col-span-3 rounded-xl'>
          <div className='w-[100%] h-20 flex flex-row text-black'>
             <div className='w-[50%] flex border-b-[2px] border-[#1f1f1f] justify-center items-center '>
@@ -150,11 +170,11 @@ function index() {
          
          <div className='w-[100%] flex gap-8 justify-center'>
 
-            <button className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
+            <button onClick={handle("Transact/Send")} className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
             <BsSend color="white" size={20} />
             </button>
 
-            <button className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
+            <button onClick={handle("Transact/Receive")} className='h-[50px] w-[50px] flex justify-center items-center rounded-2xl bg-[#111111] hover:bg-black'>
             <PiArrowBendLeftDownBold color="white" size={20} />
             </button>
 
@@ -182,7 +202,7 @@ function index() {
                 <h5 className='text-black font-mono'>${solbalance && solprice? (solbalance * solprice).toFixed(2) : "0"}</h5>
             </div>
             </div>
-            <Tokens />
+            {vaultPda? <Tokens vault={vaultPda} /> : null} 
         </div>
 
 
@@ -192,28 +212,45 @@ function index() {
 
 
          <div className=' w-[100%] flex justify-end col-span-2 pl-6'>
-         <div className='bg-white overflow-hidden rounded-xl p-5 h-[100%] w-[100%]'>
-          <h1 className='text-black font-mono'>Cards</h1>
-          <Card />
+         <div className='bg-white overflow-hidden rounded-xl p-5 h-[100%] max-h-[80vh] w-[100%]'>
+  <h1 className='text-black font-mono'>Cards</h1>
+  <Card />
 
-          <h1 className='text-black mt-8 font-mono'>Recent Transactions</h1>
-          <div className='flex flex-col gap-3 py-5 overflow-y-scroll overflow-hidden'>
-          {transaction && transaction.map((item: any, key: number) => (
-            <div key={key} className='text-white px-4 max-h-20 py-3 rounded-2xl bg-[#111111] font-main flex font-medium'>
-              <div>
-              <span>{item.type}</span>
-              <h1 className='text-sm'>From: {item.nativeTransfers[0].fromUserAccount.slice(0,18)}...{item.nativeTransfers[0].fromUserAccount.slice(26)}</h1>
-              </div>
-              <div className='flex flex-grow justify-end'>
-              <span>{(item.nativeTransfers[0].amount / LAMPORTS_PER_SOL).toFixed(4)}</span>
-              </div>
-            </div>
-           ))}
-          </div>
-         </div>
+  <h1 className='text-black mt-8 font-mono'>Recent Transactions</h1>
+  <div className='flex flex-col gap-3 py-5 overflow-hidden'>
+    <div className="max-h-[50vh] flex flex-col gap-2 overflow-y-auto">
+    {transaction && Array.isArray(transaction) && transaction.length > 0 ? (
+  transaction.map((item: any, key: number) => (
+    <a
+      key={key}
+      href={`https://explorer.solana.com/tx/${item.signature}?cluster=devnet`} // Replace with the appropriate property that contains the transaction signature
+      target="_blank" // Open link in a new tab
+      rel="noopener noreferrer" // Recommended for security reasons
+      className='text-white px-4 max-h-20 py-3 rounded-2xl bg-[#111111] font-main flex font-medium'
+    >
+      <div>
+        <span>{item.type}</span>
+        <h1 className='text-sm font-mono'>From: {item.nativeTransfers[0].fromUserAccount.slice(0,18)}...{item.nativeTransfers[0].fromUserAccount.slice(26)}</h1>
+      </div>
+      <div className='flex flex-grow justify-end'>
+        <span>{(item.nativeTransfers[0].amount / LAMPORTS_PER_SOL).toFixed(4)}</span>
+      </div>
+    </a>
+  ))
+) : (
+  <div className='text-black px-4 max-h-20 py-3 rounded-2xl font-main flex font-medium'>
+    <div>
+      <span>No transaction history</span>
+    </div>
+  </div>
+)}
+    </div>
+  </div>
+</div>
+
          </div>
     </div>
   )
 }
 
-export default index
+export default Index
