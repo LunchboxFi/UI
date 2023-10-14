@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from 'react'
 import { useRouter } from 'next/router'
 
-function index() {
+function Index() {
   const router = useRouter()
 
   const handleGateway = () => {
@@ -37,4 +37,4 @@ function index() {
   )
 }
 
-export default index
+export default Index

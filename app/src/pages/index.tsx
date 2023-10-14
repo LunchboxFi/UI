@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { BsArrowRightShort, BsDiscord, BsTwitter } from 'react-icons/bs'
 import { useRouter } from 'next/router'
+import { MouseEventHandler } from 'react'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -10,9 +11,13 @@ export default function Home() {
 
   const router = useRouter()
 
-   function handleClick(){
-    router.push('Create')
-  }
+  const handleClick = (Route: string): MouseEventHandler<HTMLButtonElement> => (
+    event: { preventDefault: () => void; }
+  ) => {
+    event.preventDefault();
+    router.push(Route);
+  };
+
   return (
     <main
       className={`flex bg-background bg-contain min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
@@ -35,15 +40,18 @@ export default function Home() {
       </div>
       <div className='h-[100%] flex-col mt-[60%] justify-end w-[100%]'>
       <div className=' h-[100%] w-[100%]'>
-        <h3 className='font-sans mt-[9rem] font-normal'>1. Leverage solana's  infrastructure</h3>
+        <h3 className='font-sans mt-[9rem] font-normal'>1. Spending Limits / 2FA authentications</h3>
         <h3 className='font-mono font-normal mt-3'>Transactions that cost a fraction of a cent and speed of less than a second</h3>
       </div>
       </div>
       </div>
       
-      <div>
-        <button onClick={handleClick} className='bg-white p-3 rounded-full'>
-          <BsArrowRightShort color='black' size={50} />
+      <div className='flex gap-3'>
+        <button onClick={handleClick("Create")} className='bg-white text-black p-3 rounded-full'>
+         Create account
+        </button>
+        <button onClick={handleClick("Dashboard")} className='bg-black border-[2px] border-white text-white p-3 rounded-full'>
+         Go to dashboard
         </button>
       </div>
 

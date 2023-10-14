@@ -34,7 +34,7 @@ interface PriceRes {
   timeTaken: number;
 }
 
-function index() {
+function Index() {
     const [multisigPda, setMultsigPda] = useState<PublicKey | undefined>();
     const [vaultPda, setVaultPda] = useState<string | null>();
     const [balance, setBalance] = useState<any>();
@@ -253,4 +253,4 @@ function index() {
   )
 }
 
-export default index
+export default Index

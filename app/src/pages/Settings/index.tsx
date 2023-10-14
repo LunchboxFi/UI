@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-function index() {
+function Index() {
 
   const router = useRouter()
 
@@ -60,4 +60,4 @@ function index() {
   )
 }
 
-export default index
+export default Index

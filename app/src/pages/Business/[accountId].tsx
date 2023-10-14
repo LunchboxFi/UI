@@ -16,7 +16,7 @@ interface BalanceRes {
 }
 
 
-function index({}: Props) {
+function Index({}: Props) {
   const [ balance, setBalance ] = useState<number | null>();
   const [transactions, setTransactions] = useState<[] | null>();
 
@@ -146,4 +146,4 @@ function index({}: Props) {
   )
 }
 
-export default index
+export default Index
