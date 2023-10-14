@@ -52,8 +52,6 @@ const Send = ({}: Props) => {
       keys: key,
     };
   
-    console.log(payload);
-  
     // Perform any asynchronous actions here
     (async () => {
       try {
@@ -66,11 +64,16 @@ const Send = ({}: Props) => {
         });
   
         if (!response.ok) {
-          console.log(response);
+          
         }
   
         const data = await response.json();
-        console.log(data);
+        
+        if(response.ok){
+          const signature = data?.data
+          const url = `/Success?receiver=${recepient}&amount=${amount}${symbol}&signature=${signature}`;
+          router.replace(url);
+        }
       } catch (error) {
         console.error('Error:', error);
       } finally {

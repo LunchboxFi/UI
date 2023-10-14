@@ -6,11 +6,7 @@ function Header() {
   const router = useRouter()
 
   const handle = (route: string) => () => {
-    if (route.startsWith('/')) {
-      router.push(route);
-    } else {
-      router.push('/' + route); // ensure an absolute path
-    }
+      router.replace(route); // ensure an absolute path
   };
   
   return (

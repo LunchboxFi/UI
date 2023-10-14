@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lottiefiles/react-lottie-player": "^3.5.3",
     "@lunchboxfi/sdk": "^0.1.18",
     "@pythnetwork/client": "^2.19.0",
     "@solana/pay": "^0.2.5",
