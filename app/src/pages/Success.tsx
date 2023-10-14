@@ -18,7 +18,7 @@ function Success() {
            src={"lottie.json"}
            className="h-[100%] w-[10rem] xl:w-[50%]"
          />
-         <h3 className='font-main'>You successfully transfered {amount} {symbol} to {receiver}</h3>
+         <h3 className='font-main font-medium'>You successfully transfered {amount} {symbol} to {receiver}</h3>
 
         </div>
     </div>

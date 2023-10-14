@@ -7,8 +7,14 @@ import {
 import * as multisig from '@sqds/multisig';
 import { useRouter } from 'next/router';
 import { ColorRing } from  'react-loader-spinner'
+import Toast from '@/components/Toast';
 
 type Props = {}
+
+enum ToastType {
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
 
 const Send = ({}: Props) => {
   const [multisigPda, setMultsigPda] = useState<PublicKey | undefined>();
@@ -17,6 +23,9 @@ const Send = ({}: Props) => {
   const [amount, setAmount] = useState<number>(0); 
   const [recepient, setRecepient] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<ToastType>(ToastType.SUCCESS);
   
   const router = useRouter();
   let symbol = "";
@@ -35,7 +44,12 @@ const Send = ({}: Props) => {
     setRecepient(inputValue);
   };
 
-  
+  const showToastMessage = () => {
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000); // Automatically hide the toast after 3 seconds
+  };
 
   const sendSol: MouseEventHandler<HTMLButtonElement> = (
     event: { preventDefault: () => void }
@@ -64,7 +78,9 @@ const Send = ({}: Props) => {
         });
   
         if (!response.ok) {
-          
+        setToastMessage("Transaction Failed")
+        setToastType(ToastType.ERROR)
+        showToastMessage()
         }
   
         const data = await response.json();
@@ -76,6 +92,7 @@ const Send = ({}: Props) => {
         }
       } catch (error) {
         console.error('Error:', error);
+        
       } finally {
         setLoading(false); // Set loading to false after the async operation is complete
       }
@@ -115,6 +132,13 @@ const Send = ({}: Props) => {
 
   return (
     <div className='w-[100%] flex justify-center'>
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
+      )}
       <div className='w-[50%] font-mono text-black rounded-xl p-5 bg-white'>
         Send tokens
         <div className='bg-white text-white flex mt-3 justify-center items-center gap-3 rounded-2xl p-3'>

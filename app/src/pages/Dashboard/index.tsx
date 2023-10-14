@@ -124,18 +124,19 @@ function index() {
       const apiUrl = `/api/getTransaction?vaultPda=${vaultPda}`;
       
       // Fetch data from the API
-        axios.get(apiUrl)
-          .then((response) => {
-            // Handle the response data here
-            if(response){
-            setTransaction(response.data.data)
-            console.log("Transaction" + response.data.data)
-            }
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
-          });
-  },[])
+      axios.get(apiUrl)
+        .then((response) => {
+          // Handle the response data here
+          if (response) {
+            setTransaction(response.data.data);
+            console.log("Transaction", response.data.data); // Separate the string and the object
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }, [vaultPda]);
+    
     
   
     
@@ -211,31 +212,42 @@ function index() {
 
 
          <div className=' w-[100%] flex justify-end col-span-2 pl-6'>
-         <div className='bg-white overflow-hidden rounded-xl p-5 h-[100%] w-[100%]'>
-          <h1 className='text-black font-mono'>Cards</h1>
-          <Card />
+         <div className='bg-white overflow-hidden rounded-xl p-5 h-[100%] max-h-[80vh] w-[100%]'>
+  <h1 className='text-black font-mono'>Cards</h1>
+  <Card />
 
-          <h1 className='text-black mt-8 font-mono'>Recent Transactions</h1>
-          <div className='flex flex-col gap-3 py-5 overflow-y-scroll overflow-hidden'>
-          <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={showToastMessage}
-      >
-        Show Toast
-      </button>
-          {transaction && Array.isArray(transaction) && transaction.map((item: any, key: number) => (
-  <div key={key} className='text-white px-4 max-h-20 py-3 rounded-2xl bg-[#111111] font-main flex font-medium'>
+  <h1 className='text-black mt-8 font-mono'>Recent Transactions</h1>
+  <div className='flex flex-col gap-3 py-5 overflow-hidden'>
+    <div className="max-h-[50vh] flex flex-col gap-2 overflow-y-auto">
+    {transaction && Array.isArray(transaction) && transaction.length > 0 ? (
+  transaction.map((item: any, key: number) => (
+    <a
+      key={key}
+      href={`https://explorer.solana.com/tx/${item.signature}?cluster=devnet`} // Replace with the appropriate property that contains the transaction signature
+      target="_blank" // Open link in a new tab
+      rel="noopener noreferrer" // Recommended for security reasons
+      className='text-white px-4 max-h-20 py-3 rounded-2xl bg-[#111111] font-main flex font-medium'
+    >
+      <div>
+        <span>{item.type}</span>
+        <h1 className='text-sm font-mono'>From: {item.nativeTransfers[0].fromUserAccount.slice(0,18)}...{item.nativeTransfers[0].fromUserAccount.slice(26)}</h1>
+      </div>
+      <div className='flex flex-grow justify-end'>
+        <span>{(item.nativeTransfers[0].amount / LAMPORTS_PER_SOL).toFixed(4)}</span>
+      </div>
+    </a>
+  ))
+) : (
+  <div className='text-black px-4 max-h-20 py-3 rounded-2xl font-main flex font-medium'>
     <div>
-      <span>{item.type}</span>
-      <h1 className='text-sm'>From: {item.nativeTransfers[0].fromUserAccount.slice(0,18)}...{item.nativeTransfers[0].fromUserAccount.slice(26)}</h1>
-    </div>
-    <div className='flex flex-grow justify-end'>
-      <span>{(item.nativeTransfers[0].amount / LAMPORTS_PER_SOL).toFixed(4)}</span>
+      <span>No transaction history</span>
     </div>
   </div>
-))}
-          </div>
-         </div>
+)}
+    </div>
+  </div>
+</div>
+
          </div>
     </div>
   )

@@ -67,6 +67,9 @@ function Accounts({}: Props) {
   
     if (parsedItem === 0 || !parsedItem) {
       console.error("Something went wrong when generating the accounts");
+      setToastMessage("Error creating account")
+      setToastType(ToastType.ERROR)
+      showToastMessage()
     } else {
       const add = parsedItem + 1;
       localStorage.setItem('acctCount', add.toString());
