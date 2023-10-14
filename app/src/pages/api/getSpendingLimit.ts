@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { encrypt, fetchMultisigAccount, createMultisig, addSpendingLimit } from '@lunchboxfi/sdk/lib'
+import { encrypt, fetchMultisigAccount, createMultisig, addSpendingLimit } from '@lunchboxfinance/sdk/lib'
 import { Keypair, TransactionMessage, Connection, clusterApiUrl, PublicKey, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import * as multisig from '@sqds/multisig'
