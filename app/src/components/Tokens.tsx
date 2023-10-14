@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import * as multisig from '@sqds/multisig'
 import axios from 'axios';
 
-const Tokens = () => {
+const Tokens = (vault: any) => {
   const [tokens, setToken] = useState<[] | null>();
   
-  const vaultPda = "GHwTtdFcjzZK2wThQ7pLBvmMxmy7qvNSdygfk7JE46U9"
-  useEffect(() => {
-    if(vaultPda) {
-      const apiUrl = `/api/getTokens?vaultPda=${vaultPda}`;
+  
 
-      // Fetch data from the API
-      
-      if (vaultPda) {
+  useEffect(() => {
+    
+
+
+    if(vault) {
+      const apiUrl = `/api/getTokens?vaultPda=${vault.vault}`;
+
+      if (vault) {
         // Use Axios to fetch data
         axios.get(apiUrl)
           .then((response) => {
@@ -20,14 +23,15 @@ const Tokens = () => {
             if(response.data){
               
               setToken(response.data.tokens)
+              console.log(response.data.tokens)
             }
           })
           .catch((error) => {
             console.error('Error fetching data:', error);
           });
       }
-    } 
-  },[vaultPda])
+    }
+  },[vault])
 
   return (
     <div>

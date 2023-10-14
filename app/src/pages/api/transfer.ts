@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { encrypt, fetchMultisigAccount, createMultisig } from '@lunchboxfi/sdk/lib'
+import { transferSOL } from '@lunchboxfi/sdk/lib'
 import { Keypair } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { type } from 'os'
