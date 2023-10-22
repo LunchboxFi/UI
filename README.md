@@ -9,6 +9,6 @@ security of a multisig while being as easy to use as any other crypto wallet eve
 
 The 2/3 multilsig is a very optimal choice for day to day transaction and if the user ever was compromised they can remove the compromised key and generate a new one without changing their "Public address". Lunchbox is commited to expanding the use cases of Multisig wallets. The hyperdrive hackathon has ended but this is just the beginning for us.
 Upcoming features:
-November 10th: PWA and Alpha testing
-Option to store secondary keysas passkeys by default.
-Card will use Seabed Labs P.A.D
+- November 10th: PWA and Alpha testing.
+- Option to store secondary keysas passkeys by default.
+- Card will use Seabed Labs P.A.D
